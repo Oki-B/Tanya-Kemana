@@ -9,6 +9,7 @@ const cors = require("cors");
 const { errorHandler } = require("./middleware/errorHandler");
 const PORT = process.env.PORT || 3000;
 const UserContoller = require("./controllers/userController");
+const ItineraryController = require('./controllers/ItineraryController');
 
 connectDB(); // connect DB on MongoDB
 
@@ -24,6 +25,9 @@ app.get("/users", UserContoller.getUser);
 
 app.post("/register", UserContoller.userRegister);
 app.post("/login", UserContoller.userLogin);
+
+app.get("/itinerary", ItineraryController.getItineraries);
+app.get("/itinerary/:id", ItineraryController.getItineraryById);
 
 app.use(errorHandler);
 

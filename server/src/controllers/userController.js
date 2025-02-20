@@ -1,6 +1,7 @@
 const User = require("../models/User");
 const { comparePass } = require("../helpers/bcrypt");
 const { signToken } = require("../helpers/jwt");
+const Profile = require("../models/Profile");
 
 class UserContoller {
   static async getUser(req, res, next) {
@@ -18,7 +19,15 @@ class UserContoller {
       const { username, email, password } = req.body;
       const user = await User.create({ username, email, password });
 
-      res.status(200).json(user);
+      if (user) {
+        await Profile.create({
+          _userId: user._id,
+          name: user.username,
+          profileImage: `https://ui-avatars.com/api/?name=${user.username}&background=random&color=fff`,
+        });
+      }
+
+      res.status(201).json(user);
     } catch (err) {
       // console.log(err);
       next(err);
@@ -42,7 +51,7 @@ class UserContoller {
 
       res.status(200).json({ access_token });
     } catch (err) {
-        console.log(err)
+      console.log(err);
       next(err);
     }
   }
