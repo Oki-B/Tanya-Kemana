@@ -1,7 +1,19 @@
+import { initFlowbite } from "flowbite";
+import { useEffect } from "react";
 import { FcGoogle } from "react-icons/fc";
-import { Link } from "react-router";
+import { Link, useNavigate, useSearchParams } from "react-router";
 
 export default function LoginPage() {
+  let [searchParams] = useSearchParams()
+
+  
+
+
+
+  
+  useEffect(() => {
+    initFlowbite();
+  }, [searchParams.get("register")]);
   return (
     <>
       <div className="flex min-h-screen w-full flex-col items-center justify-between gap-5 dark:bg-gray-800">
@@ -17,12 +29,59 @@ export default function LoginPage() {
         {/* User Form */}
         <div className="mt-10 w-5/6 text-center">
           <h1 className="mb-4 text-3xl font-extrabold leading-none tracking-tight text-gray-900 dark:text-white md:text-4xl lg:text-5xl">
-          Your Journey, Your Way
+            Your Journey, Your Way
           </h1>
-          <p className="mb-1 text-xl font-normal leading-none tracking-tight text-gray-500 dark:text-gray-400 md:text-2xl lg:text-3xl" >Create Perfect Itineraries in Minutes!</p>
-          <p className="mb-12 text-md font-normal text-gray-500 dark:text-gray-400 sm:px-16 lg:text-lg xl:px-48">
-          Transform your travel dreams into reality with customized plans that fit your style and schedule!
+          <p className="mb-1 text-xl font-normal leading-none tracking-tight text-gray-500 dark:text-gray-400 md:text-2xl lg:text-3xl">
+            Create Perfect Itineraries in Minutes!
           </p>
+          <p className="mb-12 text-md font-normal text-gray-500 dark:text-gray-400 sm:px-16 lg:text-lg xl:px-48">
+            Transform your travel dreams into reality with customized plans that
+            fit your style and schedule!
+          </p>
+
+          {searchParams.get("register") === "success" && (
+            <div
+              id="alert-border-3"
+              className="mx-auto max-w-lg  flex items-center p-4 mb-2 text-green-800 border-t-4 border-green-300 bg-green-50 dark:text-green-400 dark:bg-gray-800 dark:border-green-800"
+              role="alert"
+            >
+              <svg
+                className="shrink-0 w-4 h-4"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+              </svg>
+              <div className="ms-3 text-sm font-medium">
+                Successfully register new account!
+              </div>
+              <button
+                type="button"
+                className="ms-auto -mx-1.5 -my-1.5 bg-green-50 text-green-500 rounded-lg focus:ring-2 focus:ring-green-400 p-1.5 hover:bg-green-200 inline-flex items-center justify-center h-8 w-8 dark:bg-gray-800 dark:text-green-400 dark:hover:bg-gray-700"
+                data-dismiss-target="#alert-border-3"
+                aria-label="Close"
+              >
+                <span className="sr-only">Dismiss</span>
+                <svg
+                  className="w-3 h-3"
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 14 14"
+                >
+                  <path
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+                  />
+                </svg>
+              </button>
+            </div>
+          )}
 
           <form className="mx-auto max-w-lg rounded-lg border border-gray-200 bg-white py-6 px-10 shadow-lg dark:border-gray-700 dark:bg-gray-800">
             {/* Form Title */}
@@ -77,15 +136,21 @@ export default function LoginPage() {
             </div>
 
             <button
-            type="submit"
-            className="w-full flex justify-center gap-3 text-gray-900 bg-white hover:bg-gray-200 border border-gray-300 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-gray-600 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:bg-gray-700 me-2 mb-2"
+              type="submit"
+              className="w-full flex justify-center gap-3 text-gray-900 bg-white hover:bg-gray-200 border border-gray-300 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-gray-600 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:bg-gray-700 me-2 mb-2"
             >
-            <FcGoogle size={20}/>
+              <FcGoogle size={20} />
               Sign In with Google
             </button>
 
             <div className="my-6 text-center">
-                <p className="text-sm">Don't have an account yet? click <Link to="/register" className="text-purple-700">here</Link> to register</p>
+              <p className="text-sm">
+                Don't have an account yet? click{" "}
+                <Link to="/register" className="text-purple-700">
+                  here
+                </Link>{" "}
+                to register
+              </p>
             </div>
           </form>
         </div>
