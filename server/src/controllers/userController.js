@@ -41,13 +41,14 @@ class UserContoller {
       if (!email) throw { name: "EmailRequired" };
       if (!password) throw { name: "PasswordRequired" };
 
-      console.log(email, password);
       const user = await User.findOne({ email });
       if (!user) throw { name: "InvalidInput" };
-      console.log(user);
+
       const isValidPassword = comparePass(password, user.password);
 
-      if (!isValidPassword) throw { name: "InvalidInput" };
+      if (!isValidPassword) {
+        throw { name: "InvalidInput" };
+      }
 
       const access_token = signToken({ id: user._id });
 
@@ -60,6 +61,7 @@ class UserContoller {
 
   static async googleLogin(req, res, next) {
     try {
+      console.log("masuk google login");
       const { google_token } = req.headers;
       const client = new OAuth2Client();
 
@@ -68,20 +70,19 @@ class UserContoller {
         audience: process.env.GOOGLE_CLIENT_ID,
       });
       const payload = ticket.getPayload();
-
+      // console.log(payload);
       const email = payload.email;
-      const username = payload.username;
+      const username = payload.name;
 
-      let user  = await User
-        .findOne({ email });
+      let user = await User.findOne({ email });
 
       if (!user) {
         user = await User.create({
           email,
           username,
           password: "googleLogin",
-        }, {hooks: false});
-      
+        });
+
         if (user) {
           await Profile.create({
             _userId: user._id,
@@ -93,11 +94,14 @@ class UserContoller {
 
       const access_token = signToken({ id: user._id });
 
+      console.log(access_token);
+
       res.status(200).json({ access_token });
     } catch (err) {
-      next(err)
+      next(err);
     }
   }
+
 }
 
 module.exports = UserContoller;

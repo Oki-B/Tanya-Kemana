@@ -6,18 +6,18 @@ const userSchema = new mongoose.Schema(
     username: {
       type: String,
       required: [true, "Please provide a username"],
-      unique: [true, "Username already exists"],
+      unique: [true, "username already exists"],
     },
     email: {
       type: String,
       required: [true, "Please provide an email"],
-      unique: [true, "Email already exists"],
+      unique: [true, "email already exists"],
       match: [/.+\@.+\..+/, "Format email tidak valid"],
     },
     password: {
       type: String,
       required: [true, "Please provide a password"],
-      minlength: [6, "Password minimal 6 karakter"],
+      minlength: [6, "password must have at least 6 characters"],
     },
   },
   { timestamps: true }

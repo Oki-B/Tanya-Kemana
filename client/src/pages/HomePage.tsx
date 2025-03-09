@@ -12,7 +12,10 @@ export default function HomePage() {
     try {
       const { data } = await axios ({
         method: 'GET',
-        url: '/itinerary'
+        url: '/itinerary',
+        headers: {
+          Authorization: `Bearer ${localStorage.access_token}`
+        }
       })
       setItineraries(data)
 
