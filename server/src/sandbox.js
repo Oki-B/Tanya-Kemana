@@ -270,4 +270,7 @@ async function createItinerary() {
   }
 }
 
-createItinerary();
+// createItinerary();
+
+
+console.log(hashPass("user123")) 

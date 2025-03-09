@@ -1,13 +1,40 @@
 import { initFlowbite } from "flowbite";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { IoHome, IoNewspaper } from "react-icons/io5";
-import { FaFileCirclePlus, } from "react-icons/fa6";
+import { FaFileCirclePlus } from "react-icons/fa6";
 import { FaUserEdit } from "react-icons/fa";
-import { Link, NavLink } from "react-router";
+import { Link, NavLink, NavLinkRenderProps, useNavigate } from "react-router";
 import { PiSignOutFill } from "react-icons/pi";
+import axios from "../config/axiosInstance";
+import { ProfileType } from "../types/profileTypes";
 
 export default function SideBar() {
+  const navigate = useNavigate();
+  const [profile, setProfile] = useState<ProfileType | null>(null);
+
+  async function fetchProfile() {
+    try {
+      const { data } = await axios({
+        method: "GET",
+        url: "/profile",
+        headers: {
+          Authorization: `Bearer ${localStorage.access_token}`,
+        },
+      });
+      console.log(data);
+      setProfile(data);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  function handleLogout() {
+    localStorage.clear();
+    navigate("/login");
+  }
+
   useEffect(() => {
+    fetchProfile();
     initFlowbite();
   }, []);
   return (
@@ -57,18 +84,18 @@ export default function SideBar() {
             <li>
               <NavLink
                 to={"/"}
-                className="group flex items-center rounded-lg p-2 text-gray-900 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
+                className={({isActive}) => isActive ? "group flex items-center bg-blue-500 rounded-lg p-2 text-gray-200 dark:text-white" : "group flex items-center rounded-lg p-2 text-gray-900 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"}
               >
-                <IoHome size={20} color={"#4B5563"} />
+                <IoHome size={20} />
                 <span className="ms-3">Dashboard</span>
               </NavLink>
             </li>
             <li>
               <NavLink
                 to={"/generate"}
-                className="group flex items-center rounded-lg p-2 text-gray-900 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
+                className={({isActive}) => isActive ? "group flex items-center bg-blue-500 rounded-lg p-2 text-gray-200 dark:text-white" : "group flex items-center rounded-lg p-2 text-gray-900 hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"}
               >
-                <FaFileCirclePlus size={20} color={"#4B5563"} />
+                <FaFileCirclePlus size={20} />
                 <span className="ms-3">Generate Itinerary</span>
               </NavLink>
             </li>
@@ -81,30 +108,50 @@ export default function SideBar() {
                 <span className="ms-3">Articles</span>
               </NavLink>
             </li>
-
           </ul>
         </div>
         <div className=" bg-white py-4 px-4 border-t border-gray-200 dark:border-gray-700 mt-4 flex flex-col gap-2 relative bottom-2 w-full">
           <div>
             {/* User Profile */}
             <div className="flex items-center gap-4 border-b pb-3 border-gray-400 dark:border-gray-700">
-              <img src="https://ui-avatars.com/api/?name=user1&background=random&color=fff" alt="userImg" className="w-8 h-8 rounded-full"/>
+              <img
+                src={profile?.profileImage}
+                alt="userImg"
+                className="w-8 h-8 rounded-full"
+              />
               <div className="font-medium dark:text-white flex w-full justify-between items-center">
-                <p>John Doe</p>
-                <button type="button" className="w-fit text-white hover:bg-gray-500 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded text-xs p-2 text-center dark:focus:ring-gray-900"><FaUserEdit size={16} color="black"/></button>
+                <p>{profile?.name}</p>
+                <button
+                  type="button"
+                  className="w-fit text-white hover:bg-gray-500 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded text-xs p-2 text-center dark:focus:ring-gray-900"
+                >
+                  <FaUserEdit size={16} color="black" />
+                </button>
               </div>
             </div>
-            <Link to="/login" className="mt-4 flex w-full justify-between w-full focus:outline-none text-white text-center bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-4 py-2.5 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900"><p className="text-center w-full">Sign Out</p><PiSignOutFill size={20}/>
-            </Link>
+            <button
+              onClick={handleLogout}
+              type="button"
+              className="mt-4 flex w-full justify-between w-full focus:outline-none text-white text-center bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-4 py-2.5 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900"
+            >
+              <p className="text-center w-full">Sign Out</p>
+              <PiSignOutFill size={20} />
+            </button>
           </div>
-        <div className="mt-8 border-t border-gray-200 dark:border-gray-700 pt-4">
-          <div className="w-full flex flex-col justify-center items-center gap-1">
-          <span className="text-xs text-gray-500 sm:text-center dark:text-gray-400">© 2025 <a href="https://flowbite.com/" className="hover:underline">Syaoki Biek™</a>   </span>
-          <p className="text-xs text-gray-500 sm:text-center dark:text-gray-400">All Rights Reserved.</p>
+          <div className="mt-8 border-t border-gray-200 dark:border-gray-700 pt-4">
+            <div className="w-full flex flex-col justify-center items-center gap-1">
+              <span className="text-xs text-gray-500 sm:text-center dark:text-gray-400">
+                © 2025{" "}
+                <a href="https://flowbite.com/" className="hover:underline">
+                  Syaoki Biek™
+                </a>{" "}
+              </span>
+              <p className="text-xs text-gray-500 sm:text-center dark:text-gray-400">
+                All Rights Reserved.
+              </p>
+            </div>
           </div>
-      </div>
-            
-          </div>
+        </div>
       </aside>
     </>
   );

@@ -1,19 +1,46 @@
 import { initFlowbite } from "flowbite";
-import { useEffect } from "react";
-import { FcGoogle } from "react-icons/fc";
+import { useEffect, useState } from "react";
+
 import { Link, useNavigate, useSearchParams } from "react-router";
+import axios from "../config/axiosInstance";
+import GoogleLoginButton from "../components/GoogleLoginButton";
 
 export default function LoginPage() {
   let [searchParams] = useSearchParams()
 
-  
+  const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
+  async function handleLogin(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    try {
+      const { data } = await axios({
+        method: "POST",
+        url: "/login",
+        data: {
+          email,
+          password,
+        },
+      });
+      localStorage.setItem("access_token", data.access_token);
+      navigate("/");
+    } catch (err) {
+      console.error(err);
+    }
+  }
 
+  useEffect(() => {
+    if (localStorage.access_token) {
+      navigate("/");
+    }
+  },[])
 
-  
   useEffect(() => {
     initFlowbite();
   }, [searchParams.get("register")]);
+
+  
   return (
     <>
       <div className="flex min-h-screen w-full flex-col items-center justify-between gap-5 dark:bg-gray-800">
@@ -83,7 +110,8 @@ export default function LoginPage() {
             </div>
           )}
 
-          <form className="mx-auto max-w-lg rounded-lg border border-gray-200 bg-white py-6 px-10 shadow-lg dark:border-gray-700 dark:bg-gray-800">
+          <form onSubmit={handleLogin}
+          className="mx-auto w-md rounded-lg border border-gray-200 bg-white py-6 px-10 shadow-lg dark:border-gray-700 dark:bg-gray-800">
             {/* Form Title */}
             <h2 className="my-6 text-4xl font-semibold text-gray-600">Login</h2>
 
@@ -101,6 +129,7 @@ export default function LoginPage() {
                 className="shadow-xs dark:shadow-xs-light block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
                 placeholder="example@mail.com"
                 required={true}
+                onChange={(e) => setEmail(e.target.value)}
               />
             </div>
 
@@ -118,6 +147,7 @@ export default function LoginPage() {
                 placeholder="•••••••••"
                 className="shadow-xs dark:shadow-xs-light block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
                 required={true}
+                onChange={(e) => setPassword(e.target.value)}
               />
             </div>
 
@@ -134,14 +164,9 @@ export default function LoginPage() {
                 or
               </span>
             </div>
-
-            <button
-              type="submit"
-              className="w-full flex justify-center gap-3 text-gray-900 bg-white hover:bg-gray-200 border border-gray-300 focus:ring-4 focus:outline-none focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:focus:ring-gray-600 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:hover:bg-gray-700 me-2 mb-2"
-            >
-              <FcGoogle size={20} />
-              Sign In with Google
-            </button>
+          
+            {/* Google Sign In Button */}
+            <GoogleLoginButton />
 
             <div className="my-6 text-center">
               <p className="text-sm">
@@ -159,9 +184,9 @@ export default function LoginPage() {
         <footer className="w-screen bg-white shadow-sm dark:bg-gray-900">
           <div className="mx-auto my-6 w-full lg:my-6">
             <span className="block text-sm text-gray-500 dark:text-gray-400 text-center">
-              © 2023{" "}
+              © 2025{" "}
               <a href="https://flowbite.com/" className="hover:underline">
-                Flowbite™
+                Syaoki Biek™
               </a>
               . All Rights Reserved.
             </span>

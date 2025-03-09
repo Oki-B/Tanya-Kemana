@@ -48,7 +48,7 @@ export default function RegisterPage() {
         </div>
 
         {/* Register Form */}
-        <div className="mt-10 w-5/6 text-center">
+        <div className="mt-10 mx-5 sm:w-5/6 text-center">
           <h1 className="mb-4 text-3xl font-extrabold leading-none tracking-tight text-gray-900 dark:text-white md:text-4xl lg:text-5xl">
             Your Journey, Your Way
           </h1>
@@ -61,7 +61,7 @@ export default function RegisterPage() {
           </p>
 
           <form
-            className="mx-auto max-w-lg rounded-lg border border-gray-200 bg-white py-6 px-10 shadow-lg dark:border-gray-700 dark:bg-gray-800"
+            className="mx-auto w-md rounded-lg border border-gray-200 bg-white py-6 px-10 shadow-lg dark:border-gray-700 dark:bg-gray-800"
             onSubmit={handleSubmit}
           >
             {/* Form Title */}
